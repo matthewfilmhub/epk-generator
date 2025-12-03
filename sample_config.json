@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "title": "Sample Horror Film",
+    "tagline": "Fear has a new face",
+    "logline": "A group of friends discovers an ancient evil lurking in the shadows of their small town, forcing them to confront their darkest fears.",
+    "synopsis": "When Sarah returns to her hometown after ten years, she's unprepared for the nightmares that await. The old Blackwood Manor, long abandoned, has begun calling to the town's residents in their dreams. As people start disappearing, Sarah and her childhood friends must uncover the manor's dark history.\n\nWhat they discover is far worse than they imagined. An ancient entity, trapped within the manor's walls for centuries, has found a way to reach into the waking world. Armed only with their courage and fragments of local legend, the group must enter Blackwood Manor to face the evil head-on.\n\nAs reality and nightmare blur, they realize that defeating the entity will require a sacrifice none of them are prepared to make. In a race against time, they must choose between saving their town and saving themselves.",
+    "genre": "Horror",
+    "runtime": "95 minutes",
+    "rating": "R",
+    "release_date": "2025",
+    "language": "English",
+    "country": "USA",
+    "director": "Jane Smith"
+  },
+  "team": [
+    {
+      "name": "Jane Smith",
+      "role": "Writer/Director",
+      "bio": "Jane Smith is an award-winning filmmaker known for her atmospheric horror films. Her debut feature won Best First Feature at Fantastic Fest."
+    },
+    {
+      "name": "John Doe",
+      "role": "Lead Actor",
+      "bio": "John Doe brings intensity and depth to the role of Sarah. Known for his work in independent cinema, this marks his horror debut."
+    }
+  ],
+  "awards": [
+    {
+      "festival_name": "Heartland International Film Festival",
+      "award": "Horror Award - Best Feature",
+      "year": "2024"
+    },
+    {
+      "festival_name": "Fantastic Fest",
+      "award": "Audience Award",
+      "year": "2024"
+    }
+  ],
+  "festivals": [
+    {
+      "festival_name": "Sundance Film Festival",
+      "year": "2025",
+      "selection_type": "World Premiere"
+    },
+    {
+      "festival_name": "SXSW",
+      "year": "2025",
+      "selection_type": "Official Selection"
+    }
+  ],
+  "reviews": [
+    {
+      "quote": "A masterclass in atmospheric horror that will haunt you long after the credits roll.",
+      "source": "The Hollywood Reporter",
+      "rating": "5"
+    },
+    {
+      "quote": "Smith proves herself as a director to watch with this chilling debut.",
+      "source": "Variety",
+      "rating": "4"
+    }
+  ],
+  "press_coverage": [
+    {
+      "title": "New Horror Film Redefines the Genre",
+      "publication": "IndieWire",
+      "date": "January 2025",
+      "url": "https://www.indiewire.com/sample",
+      "excerpt": "Director Jane Smith creates a terrifying atmosphere that sets a new standard for independent horror."
+    }
+  ],
+  "distribution": {
+    "theatrical_release": "March 15, 2025",
+    "digital_release": "May 1, 2025",
+    "platforms": ["Apple TV", "Prime Video", "YouTube"],
+    "territories": ["USA", "Canada", "UK"]
+  },
+  "technical": {
+    "aspect_ratio": "2.39:1",
+    "sound": "5.1 Surround",
+    "color": "Color"
+  },
+  "contact": {
+    "distribution_company": "Filmhub",
+    "name": "Distribution Team",
+    "email": "distribution@filmhub.com",
+    "phone": "(555) 123-4567",
+    "website": "https://filmhub.com"
+  }
+}
