@@ -240,11 +240,30 @@ function App() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Film className="w-12 h-12 text-orange-500 mr-3" />
-            <h1 className="text-5xl font-bold text-white">EPK Generator</h1>
+          <div className="flex flex-col items-center justify-center mb-6">
+            {/* Filmhub Logo - Add logo image here */}
+            <div className="mb-4">
+              <img 
+                src="/filmhub-logo.png" 
+                alt="Filmhub" 
+                className="h-12 w-auto"
+                onError={(e) => {
+                  // Fallback if logo not found
+                  e.target.style.display = 'none';
+                  e.target.nextElementSibling.style.display = 'block';
+                }}
+              />
+              <div style={{display: 'none'}} className="text-orange-500 text-2xl font-bold">
+                FILMHUB
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <Film className="w-12 h-12 text-orange-500 mr-3" />
+              <h1 className="text-5xl font-bold text-white">EPK Generator</h1>
+            </div>
           </div>
           <p className="text-xl text-gray-400">Create professional Electronic Press Kits for your films</p>
+          <p className="text-sm text-gray-500 mt-2">Powered by Filmhub</p>
         </div>
 
         {/* Progress Steps */}
@@ -376,7 +395,7 @@ function App() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Team Photos (Name files matching team member names)
+                    Team Photos (Recommended: 800x800px or larger, square aspect ratio)
                   </label>
                   <input
                     type="file"
@@ -699,6 +718,32 @@ function App() {
             </div>
           </div>
         )}
+      </div>
+      
+      {/* Footer */}
+      <div className="border-t border-gray-800 mt-12 pt-8 pb-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center justify-center text-center">
+            <img 
+              src="/filmhub-logo.png" 
+              alt="Filmhub" 
+              className="h-8 w-auto mb-3"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextElementSibling.style.display = 'block';
+              }}
+            />
+            <div style={{display: 'none'}} className="text-orange-500 text-lg font-bold mb-3">
+              FILMHUB
+            </div>
+            <p className="text-gray-400 text-sm">
+              Professional EPK Generator powered by Filmhub
+            </p>
+            <p className="text-gray-500 text-xs mt-2">
+              © {new Date().getFullYear()} Filmhub. All rights reserved.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
