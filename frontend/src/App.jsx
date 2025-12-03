@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Download, CheckCircle, AlertCircle, Film } from 'lucide-react';
+import { generateEPKHTML } from './epkGenerator';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+// No API needed - everything runs client-side!
 
 function App() {
   const [activeStep, setActiveStep] = useState(0);
@@ -150,35 +151,39 @@ function App() {
       setError(null);
       setGenerating(true);
 
-      const formData = new FormData();
-      formData.append('config', JSON.stringify(config));
+      // Client-side validation
+      const errors = [];
+      const warnings = [];
 
-      if (assets.poster) {
-        formData.append('poster', assets.poster);
+      if (!config.metadata.title) errors.push('Film title is required');
+      if (!config.metadata.logline) errors.push('Logline is required');
+      if (!config.metadata.synopsis) errors.push('Synopsis is required');
+      if (!config.metadata.genre) errors.push('Genre is required');
+      if (!config.metadata.runtime) errors.push('Runtime is required');
+      if (!config.contact.email) errors.push('Contact email is required');
+      if (!assets.poster) errors.push('Poster image is required');
+
+      if (assets.stills.length < 8) {
+        warnings.push(`Only ${assets.stills.length} stills provided. Recommended: 8-12`);
       }
 
-      assets.stills.forEach(still => {
-        formData.append('stills', still);
-      });
-
-      assets.teamPhotos.forEach(photo => {
-        formData.append('team_photos', photo);
-      });
-
-      const response = await fetch(`${API_URL}/api/projects/create`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to create project');
+      if (config.metadata.synopsis && config.metadata.synopsis.length < 200) {
+        warnings.push(`Synopsis is short (${config.metadata.synopsis.length} chars). Recommended: 200-400 words`);
       }
 
-      const data = await response.json();
-      setProjectId(data.project_id);
-      setValidation(data.validation);
-      setActiveStep(1);
+      setValidation({
+        is_valid: errors.length === 0,
+        errors,
+        warnings
+      });
+
+      if (errors.length === 0) {
+        // Generate a simple project ID
+        setProjectId(`epk-${Date.now()}`);
+        setActiveStep(1);
+      } else {
+        throw new Error('Please fix the validation errors before continuing');
+      }
 
     } catch (err) {
       setError(err.message);
@@ -192,18 +197,18 @@ function App() {
       setError(null);
       setGenerating(true);
 
-      const response = await fetch(
-        `${API_URL}/api/projects/${projectId}/generate?generate_pdf=true`,
-        { method: 'POST' }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail?.message || errorData.detail || 'Failed to generate EPK');
-      }
-
-      const data = await response.json();
-      setDownloadUrls(data.download_urls);
+      // Generate HTML client-side
+      const htmlContent = generateEPKHTML(config, assets);
+      
+      // Create a blob and download URL
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      
+      setDownloadUrls({
+        html: url,
+        htmlFilename: `${config.metadata.title?.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'epk'}_epk.html`
+      });
+      
       setActiveStep(2);
 
     } catch (err) {
@@ -214,8 +219,19 @@ function App() {
   };
 
   const downloadFile = (type) => {
-    if (downloadUrls) {
-      window.open(`${API_URL}${downloadUrls[type]}`, '_blank');
+    if (downloadUrls && downloadUrls.html) {
+      const link = document.createElement('a');
+      link.href = downloadUrls.html;
+      link.download = downloadUrls.htmlFilename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+  
+  const openHTMLPreview = () => {
+    if (downloadUrls && downloadUrls.html) {
+      window.open(downloadUrls.html, '_blank');
     }
   };
 
@@ -641,21 +657,31 @@ function App() {
                 <p className="text-gray-600">Your Electronic Press Kit is ready to download.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 gap-4 mb-8">
                 <button
                   onClick={() => downloadFile('html')}
                   className="flex items-center justify-center py-4 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold"
                 >
                   <FileText className="w-6 h-6 mr-2" />
-                  Download HTML
+                  Download HTML EPK
                 </button>
                 <button
-                  onClick={() => downloadFile('pdf')}
-                  className="flex items-center justify-center py-4 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-semibold"
+                  onClick={openHTMLPreview}
+                  className="flex items-center justify-center py-4 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold"
                 >
-                  <Download className="w-6 h-6 mr-2" />
-                  Download PDF
+                  <FileText className="w-6 h-6 mr-2" />
+                  Preview in Browser
                 </button>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                  <p className="text-blue-800 font-semibold mb-2">📄 Create PDF from HTML:</p>
+                  <ol className="list-decimal list-inside text-blue-700 space-y-1">
+                    <li>Click "Preview in Browser" or download HTML</li>
+                    <li>Press Ctrl/Cmd + P (Print)</li>
+                    <li>Choose "Save as PDF"</li>
+                    <li>Click "Save"</li>
+                  </ol>
+                  <p className="text-blue-600 mt-2 text-xs">The HTML is print-optimized for professional PDF output!</p>
+                </div>
               </div>
 
               <button
