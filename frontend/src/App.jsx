@@ -136,6 +136,52 @@ function App() {
     }));
   };
 
+  const addFestival = () => {
+    setConfig(prev => ({
+      ...prev,
+      festivals: [...prev.festivals, { festival_name: '', year: '', selection_type: '' }]
+    }));
+  };
+
+  const updateFestival = (index, field, value) => {
+    setConfig(prev => ({
+      ...prev,
+      festivals: prev.festivals.map((festival, i) => 
+        i === index ? { ...festival, [field]: value } : festival
+      )
+    }));
+  };
+
+  const removeFestival = (index) => {
+    setConfig(prev => ({
+      ...prev,
+      festivals: prev.festivals.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addPress = () => {
+    setConfig(prev => ({
+      ...prev,
+      press_coverage: [...prev.press_coverage, { title: '', publication: '', date: '', url: '', excerpt: '' }]
+    }));
+  };
+
+  const updatePress = (index, field, value) => {
+    setConfig(prev => ({
+      ...prev,
+      press_coverage: prev.press_coverage.map((press, i) => 
+        i === index ? { ...press, [field]: value } : press
+      )
+    }));
+  };
+
+  const removePress = (index) => {
+    setConfig(prev => ({
+      ...prev,
+      press_coverage: prev.press_coverage.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleFileChange = (type, files) => {
     if (type === 'poster') {
       setAssets(prev => ({ ...prev, poster: files[0] }));
@@ -395,8 +441,11 @@ function App() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Team Photos (Recommended: 800x800px or larger, square aspect ratio)
+                    Team Photos (Recommended: 800x800px or larger, square aspect ratio. Name files to match team member names)
                   </label>
+                  <p className="text-xs text-gray-500 mb-2">
+                    💡 Example: If team member is "John Smith", name the file "john-smith.jpg" or "John Smith.jpg"
+                  </p>
                   <input
                     type="file"
                     accept="image/*"
@@ -504,6 +553,52 @@ function App() {
                 ))}
               </div>
 
+              {/* Festival Screenings */}
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold text-gray-700">Festival Screenings (Optional)</h3>
+                  <button
+                    onClick={addFestival}
+                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                  >
+                    + Add Festival
+                  </button>
+                </div>
+                {config.festivals.map((festival, index) => (
+                  <div key={index} className="mb-4 p-4 border rounded-lg bg-gray-50">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+                      <input
+                        type="text"
+                        placeholder="Festival Name"
+                        className="px-4 py-2 border rounded-lg"
+                        value={festival.festival_name}
+                        onChange={(e) => updateFestival(index, 'festival_name', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Year"
+                        className="px-4 py-2 border rounded-lg"
+                        value={festival.year}
+                        onChange={(e) => updateFestival(index, 'year', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Selection Type (e.g., World Premiere)"
+                        className="px-4 py-2 border rounded-lg"
+                        value={festival.selection_type}
+                        onChange={(e) => updateFestival(index, 'selection_type', e.target.value)}
+                      />
+                    </div>
+                    <button
+                      onClick={() => removeFestival(index)}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
               {/* Reviews */}
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-4">
@@ -552,6 +647,148 @@ function App() {
                     </button>
                   </div>
                 ))}
+              </div>
+
+              {/* Press Coverage */}
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold text-gray-700">Press Coverage (Optional)</h3>
+                  <button
+                    onClick={addPress}
+                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                  >
+                    + Add Article
+                  </button>
+                </div>
+                {config.press_coverage.map((press, index) => (
+                  <div key={index} className="mb-4 p-4 border rounded-lg bg-gray-50">
+                    <input
+                      type="text"
+                      placeholder="Article Title"
+                      className="w-full px-4 py-2 border rounded-lg mb-2"
+                      value={press.title}
+                      onChange={(e) => updatePress(index, 'title', e.target.value)}
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                      <input
+                        type="text"
+                        placeholder="Publication (e.g., Variety)"
+                        className="px-4 py-2 border rounded-lg"
+                        value={press.publication}
+                        onChange={(e) => updatePress(index, 'publication', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Date (e.g., January 2025)"
+                        className="px-4 py-2 border rounded-lg"
+                        value={press.date}
+                        onChange={(e) => updatePress(index, 'date', e.target.value)}
+                      />
+                    </div>
+                    <input
+                      type="url"
+                      placeholder="Article URL (optional)"
+                      className="w-full px-4 py-2 border rounded-lg mb-2"
+                      value={press.url}
+                      onChange={(e) => updatePress(index, 'url', e.target.value)}
+                    />
+                    <textarea
+                      placeholder="Brief excerpt (optional)"
+                      className="w-full px-4 py-2 border rounded-lg mb-2"
+                      rows="2"
+                      value={press.excerpt}
+                      onChange={(e) => updatePress(index, 'excerpt', e.target.value)}
+                    />
+                    <button
+                      onClick={() => removePress(index)}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Technical Information */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold mb-4 text-gray-700">Technical Information (Optional)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Aspect Ratio</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., 16:9, 2.35:1"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={config.technical.aspect_ratio}
+                      onChange={(e) => handleConfigChange('technical', 'aspect_ratio', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Sound</label>
+                    <select
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={config.technical.sound}
+                      onChange={(e) => handleConfigChange('technical', 'sound', e.target.value)}
+                    >
+                      <option value="5.1 Surround">5.1 Surround</option>
+                      <option value="Stereo">Stereo</option>
+                      <option value="Dolby Atmos">Dolby Atmos</option>
+                      <option value="7.1 Surround">7.1 Surround</option>
+                      <option value="Mono">Mono</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                    <select
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={config.technical.color}
+                      onChange={(e) => handleConfigChange('technical', 'color', e.target.value)}
+                    >
+                      <option value="Color">Color</option>
+                      <option value="Black & White">Black & White</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Distribution Information */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold mb-4 text-gray-700">Distribution (Optional)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Theatrical Release Date</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., March 15, 2025"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={config.distribution.theatrical_release || ''}
+                      onChange={(e) => handleConfigChange('distribution', 'theatrical_release', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Digital Release Date</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., May 1, 2025"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={config.distribution.digital_release || ''}
+                      onChange={(e) => handleConfigChange('distribution', 'digital_release', e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Platforms (comma-separated)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g., Netflix, Prime Video, Apple TV"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    value={config.distribution.platforms ? config.distribution.platforms.join(', ') : ''}
+                    onChange={(e) => {
+                      const platforms = e.target.value.split(',').map(p => p.trim()).filter(p => p);
+                      handleConfigChange('distribution', 'platforms', platforms);
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Contact Information */}
